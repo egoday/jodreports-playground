@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+        <relativePath/>
+    </parent>
+    
+    <groupId>com.jodreports</groupId>
+    <artifactId>jodreports-playground</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>JODReports Playground</name>
+    <description>Spring Boot application for testing JODReports templates</description>
+    
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+    
+    <dependencies>
+        <!-- Spring Boot Starters -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        
+        <!-- JODReports -->
+        <dependency>
+            <groupId>net.sf.jodreports</groupId>
+            <artifactId>jodreports</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        
+        <!-- JSON Processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        
+        <!-- File Upload -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+        
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 
+                        JVM arguments required for Java 17+ compatibility with JODReports 2.4.0.
+                        JODReports uses the XOM library which depends on internal Xerces XML parser classes
+                        that are not exported by default in the Java module system. These add-opens 
+                        directives allow access to these internal packages.
+                        
+                        This is a known limitation of JODReports 2.4.0 with modern Java versions.
+                        Future versions of JODReports may address this compatibility issue.
+                    -->
+                    <jvmArguments>
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+                    </jvmArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Same JVM arguments required for running tests with JODReports -->
+                    <argLine>
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+                        --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

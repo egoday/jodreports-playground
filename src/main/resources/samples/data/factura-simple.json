@@ -1,0 +1,48 @@
+{
+  "factura": {
+    "numero": "FAC-2024-001",
+    "fecha": "15 de enero de 2024",
+    "vencimiento": "15 de febrero de 2024"
+  },
+  "empresa": {
+    "nombre": "Mi Empresa S.L.",
+    "direccion": "Calle Principal 123",
+    "ciudad": "Madrid",
+    "cp": "28001",
+    "nif": "B12345678",
+    "telefono": "+34 91 123 45 67",
+    "email": "info@miempresa.com"
+  },
+  "cliente": {
+    "nombre": "Cliente Ejemplo S.A.",
+    "direccion": "Avenida Secundaria 456",
+    "ciudad": "Barcelona",
+    "cp": "08001",
+    "nif": "A87654321"
+  },
+  "productos": [
+    {
+      "descripcion": "Servicio de consultoría",
+      "cantidad": 10,
+      "precio": 100.00,
+      "total": 1000.00
+    },
+    {
+      "descripcion": "Desarrollo de software",
+      "cantidad": 40,
+      "precio": 75.00,
+      "total": 3000.00
+    },
+    {
+      "descripcion": "Mantenimiento mensual",
+      "cantidad": 1,
+      "precio": 500.00,
+      "total": 500.00
+    }
+  ],
+  "subtotal": 4500.00,
+  "iva": 21,
+  "iva_importe": 945.00,
+  "total": 5445.00,
+  "notas": "Pago mediante transferencia bancaria. IBAN: ES12 1234 5678 9012 3456 7890"
+}

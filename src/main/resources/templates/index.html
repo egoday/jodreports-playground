@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JODReports Playground</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 JODReports Playground</h1>
+            <p class="subtitle">Sube tu plantilla ODT, introduce datos JSON y genera documentos al instante.</p>
+        </header>
+
+        <main>
+            <form id="generateForm" enctype="multipart/form-data">
+                <div class="form-section">
+                    <h2>📄 Plantilla ODT</h2>
+                    <div class="file-upload">
+                        <input type="file" id="template" name="template" accept=".odt" required>
+                        <label for="template">
+                            <span class="upload-icon">📁</span>
+                            <span class="upload-text">Arrastra tu archivo ODT aquí o haz clic para seleccionar</span>
+                            <span class="file-name" id="selectedFileName"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="samples-section" th:if="${not #lists.isEmpty(sampleTemplates)}">
+                        <h3>Plantillas de ejemplo:</h3>
+                        <div class="sample-buttons">
+                            <button type="button" class="sample-btn template-sample" 
+                                    th:each="template : ${sampleTemplates}"
+                                    th:data-filename="${template}"
+                                    th:text="${template}">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>📝 Datos JSON</h2>
+                    <textarea id="jsonData" name="data" placeholder='{"nombre": "Juan", "fecha": "2024-01-15"}' required></textarea>
+                    
+                    <div class="json-actions">
+                        <button type="button" id="formatJson" class="action-btn">🔧 Formatear JSON</button>
+                        <button type="button" id="validateJson" class="action-btn">✅ Validar JSON</button>
+                    </div>
+                    
+                    <div class="samples-section" th:if="${not #lists.isEmpty(sampleData)}">
+                        <h3>Datos de ejemplo:</h3>
+                        <div class="sample-buttons">
+                            <button type="button" class="sample-btn data-sample" 
+                                    th:each="sample : ${sampleData}"
+                                    th:data-content="${sample.content}"
+                                    th:text="${sample.name}">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="generate-btn" id="generateBtn">
+                        🚀 Generar Documento
+                    </button>
+                </div>
+            </form>
+
+            <div id="statusMessage" class="status-message hidden"></div>
+            <div id="loadingSpinner" class="loading-spinner hidden">
+                <div class="spinner"></div>
+                <span>Generando documento...</span>
+            </div>
+        </main>
+
+        <footer>
+            <p>JODReports Playground - Usa plantillas JODReports con FreeMarker</p>
+            <p><a href="https://github.com/jodreports/jodreports" target="_blank">Documentación JODReports</a></p>
+        </footer>
+    </div>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
