@@ -72,9 +72,7 @@ class JodReportsPlaygroundApplicationTests {
         // JODReports may not detect invalid template until document generation
         // So this test just ensures the method doesn't throw on basic invalid content
         // The actual validation happens during document generation
-        boolean result = jodReportsService.isValidTemplate(invalidTemplate);
-        // Note: The method may return true or false depending on how JODReports validates
-        // The important thing is it doesn't crash
-        assertNotNull(Boolean.valueOf(result));
+        jodReportsService.isValidTemplate(invalidTemplate);
+        // Test passes if no exception is thrown
     }
 }

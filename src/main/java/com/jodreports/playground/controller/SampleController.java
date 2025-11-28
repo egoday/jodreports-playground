@@ -13,19 +13,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/samples")
 public class SampleController {
 
     private static final String ODT_MEDIA_TYPE = "application/vnd.oasis.opendocument.text";
+    
+    // Whitelist of allowed sample template files
+    private static final Set<String> ALLOWED_TEMPLATES = Set.of(
+            "carta-bienvenida.odt",
+            "factura-simple.odt"
+    );
+    
+    // Whitelist of allowed sample data files
+    private static final Set<String> ALLOWED_DATA_FILES = Set.of(
+            "carta-bienvenida.json",
+            "factura-simple.json"
+    );
 
     @GetMapping("/templates/{filename}")
     public ResponseEntity<byte[]> getSampleTemplate(@PathVariable String filename) {
+        // Validate filename against whitelist
+        if (!ALLOWED_TEMPLATES.contains(filename)) {
+            return ResponseEntity.notFound().build();
+        }
+        
         try {
-            // Sanitize filename to prevent path traversal
-            String sanitizedFilename = sanitizeFilename(filename);
-            Resource resource = new ClassPathResource("samples/templates/" + sanitizedFilename);
+            Resource resource = new ClassPathResource("samples/templates/" + filename);
             
             if (!resource.exists()) {
                 return ResponseEntity.notFound().build();
@@ -35,7 +51,7 @@ public class SampleController {
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.parseMediaType(ODT_MEDIA_TYPE));
-            headers.setContentDispositionFormData("attachment", sanitizedFilename);
+            headers.setContentDispositionFormData("attachment", filename);
             
             return new ResponseEntity<>(content, headers, HttpStatus.OK);
             
@@ -46,10 +62,13 @@ public class SampleController {
 
     @GetMapping("/data/{filename}")
     public ResponseEntity<String> getSampleData(@PathVariable String filename) {
+        // Validate filename against whitelist
+        if (!ALLOWED_DATA_FILES.contains(filename)) {
+            return ResponseEntity.notFound().build();
+        }
+        
         try {
-            // Sanitize filename to prevent path traversal
-            String sanitizedFilename = sanitizeFilename(filename);
-            Resource resource = new ClassPathResource("samples/data/" + sanitizedFilename);
+            Resource resource = new ClassPathResource("samples/data/" + filename);
             
             if (!resource.exists()) {
                 return ResponseEntity.notFound().build();
@@ -64,10 +83,5 @@ public class SampleController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private String sanitizeFilename(String filename) {
-        // Remove any path traversal attempts
-        return filename.replaceAll("[^a-zA-Z0-9._-]", "");
     }
 }

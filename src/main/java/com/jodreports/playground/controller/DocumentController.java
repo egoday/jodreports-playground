@@ -36,7 +36,7 @@ public class DocumentController {
      * @return The generated document as a downloadable file
      */
     @PostMapping("/generate")
-    public ResponseEntity<byte[]> generateDocument(
+    public ResponseEntity<?> generateDocument(
             @RequestParam("template") MultipartFile template,
             @RequestParam("data") String jsonData) {
         
@@ -49,7 +49,8 @@ public class DocumentController {
             // Validate template
             if (!jodReportsService.isValidTemplate(templateBytes)) {
                 return ResponseEntity.badRequest()
-                        .body("Invalid ODT template file".getBytes());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(Map.of("error", "Invalid ODT template file"));
             }
 
             byte[] generatedDocument = jodReportsService.generateDocument(templateBytes, jsonData);

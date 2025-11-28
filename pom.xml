@@ -66,6 +66,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!-- 
+                        JVM arguments required for Java 17+ compatibility with JODReports 2.4.0.
+                        JODReports uses the XOM library which depends on internal Xerces XML parser classes
+                        that are not exported by default in the Java module system. These add-opens 
+                        directives allow access to these internal packages.
+                        
+                        This is a known limitation of JODReports 2.4.0 with modern Java versions.
+                        Future versions of JODReports may address this compatibility issue.
+                    -->
                     <jvmArguments>
                         --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
                         --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
@@ -77,6 +86,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!-- Same JVM arguments required for running tests with JODReports -->
                     <argLine>
                         --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
                         --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
